@@ -15,8 +15,10 @@ class PlateCalculatorScreen extends StatefulWidget {
 }
 
 class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
-  List<double> availiblePlates = [];
+  List<Plate> availiblePlates = [];
+  List<Plate> requiredPlates = [];
   late double _weight;
+  bool _validWeight = true;
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _barWeightController =
       TextEditingController(text: '45');
@@ -30,11 +32,11 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
   @override
   void initState() {
     if (widget.weightFromOtherScreen == null) {
-      _weight = 0.0;
+      _weight = 0;
     } else {
       _weight = widget.weightFromOtherScreen!;
     }
-    _weightController.text = _weight.toString();
+    _weightController.text = _weight.toStringAsFixed(0);
     // TODO: implement initState
     super.initState();
   }
@@ -45,8 +47,7 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
       key: UniqueKey(),
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 3
-      ),
+          crossAxisCount: 3, childAspectRatio: 4),
       itemBuilder: (context, index) {
         return CheckboxListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -56,21 +57,59 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
               setState(() {
                 kgPlateOptions[index].availible = value;
                 listHandler(kgPlateOptions);
+                calculateRequired();
               });
             });
       },
-      itemCount: lbPlateOptions.length,
+      itemCount: kgPlateOptions.length,
     );
   }
 
-  void listHandler(List<Plate> plates){
+  void listHandler(List<Plate> plates) {
     availiblePlates = [];
-    for(Plate plate in plates){
-      if ( plate.availible == true ){
-        availiblePlates.add(plate.value);
+    for (Plate plate in plates) {
+      plate.needed = 1;
+      if (plate.availible == true) {
+        availiblePlates.add(plate);
       }
     }
-    print(availiblePlates);
+  }
+
+
+
+  void calculateRequired(){
+    // print('called')_selectedPlate[0] == true ? lbPlates(context) : kgPlates();
+    requiredPlates = [];
+    double weight = double.parse(_weightController.text);
+    double barWeight = double.parse(_barWeightController.text);
+    double total = weight - barWeight;
+    double perSide = total / 2.0;
+    _validWeight = true;
+    if(_selectedPlate[0] == true){
+      if(perSide % 2.5 != 0){
+        _validWeight = false;
+        return;
+      }
+    }else{
+      if(perSide % 0.5 != 0){
+        _validWeight = false;
+        return;
+      }
+    }
+    for(int i = 0; i < availiblePlates.length ; i++){
+      while(perSide >= availiblePlates[i].value){
+        perSide -= availiblePlates[i].value;
+        if(requiredPlates.contains(availiblePlates[i])){
+          var matching = requiredPlates.firstWhere((element) => element == availiblePlates[i]);
+          matching.needed = matching.needed + 1;
+        }else{
+          requiredPlates.add(availiblePlates[i]);
+        }
+      }
+    }
+    for(Plate plate in requiredPlates){
+      print('${ plate.needed } of ${plate.value}');
+    }
   }
 
   Widget lbPlates(BuildContext context) {
@@ -79,8 +118,7 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
       key: UniqueKey(),
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, childAspectRatio: 3
-      ),
+          crossAxisCount: 3, childAspectRatio: 4),
       itemBuilder: (context, index) {
         return CheckboxListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -90,10 +128,84 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
               setState(() {
                 lbPlateOptions[index].availible = value;
                 listHandler(lbPlateOptions);
+                calculateRequired();
               });
             });
       },
       itemCount: lbPlateOptions.length,
+    );
+  }
+
+  Widget plateShape(Plate plate) {
+    return Row(
+      children: [
+        Container(
+            width: plate.size,
+            height: plate.size,
+            margin: const EdgeInsets.only(top: 5),
+            decoration: BoxDecoration(
+                color: plate.color,
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Colors.black,
+                    width: 3,
+                    strokeAlign: StrokeAlign.inside)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                plate.value > 3
+                    ? Text(
+                        plate.value.toStringAsFixed(0),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: plate.fontColor),
+                      )
+                    : Text(
+                        plate.value.toStringAsFixed(2),
+                        style: TextStyle(color: plate.fontColor, fontWeight: FontWeight.bold),
+                      ),
+              ],
+            )),
+        SizedBox(width: 10,),
+        Text('X ${plate.needed.toString()}')
+      ],
+    );
+  }
+
+  Widget plateCalc() {
+    if(_weightController.text == '0'){
+      return const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('No Weight Given'),
+      );
+    }
+    if(!_validWeight){
+      return const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('Weight not achievable with availible plates'),
+      );
+    }
+    if(requiredPlates.length == 0){
+      return const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('No Plates Selected'),
+      );
+    }
+    calculateRequired();
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                plateShape(requiredPlates[index]),
+                plateShape(requiredPlates[index]),
+              ],
+            );
+          },
+          itemCount: requiredPlates.length,
+        ),
+      ],
     );
   }
 
@@ -104,7 +216,7 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
         title: const Text('Plate Calculator'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Padding(
@@ -119,13 +231,15 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       controller: _weightController,
+                      onFieldSubmitted: (_){
+                        setState(() {
+                          calculateRequired();
+                        });
+                      },
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(
-              height: 25,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 55.0),
@@ -139,19 +253,29 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       controller: _barWeightController,
+                      onFieldSubmitted: (_){
+                        setState(() {
+                          calculateRequired();
+                        });
+                      },
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 10,
             ),
             ToggleButtons(
                 onPressed: (int index) {
                   setState(() {
                     for (int i = 0; i < _selectedPlate.length; i++) {
                       _selectedPlate[i] = i == index;
+                    }
+                    if(_selectedPlate[0] == true){
+                      listHandler(lbPlateOptions);
+                    }else{
+                      listHandler(kgPlateOptions);
                     }
                   });
                 },
@@ -162,6 +286,7 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
                 isSelected: _selectedPlate,
                 children: _plates),
             _selectedPlate[0] == true ? lbPlates(context) : kgPlates(),
+            plateCalc(),
           ],
         ),
       ),
