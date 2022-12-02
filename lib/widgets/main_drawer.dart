@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:open_gym/screens/how_to.dart';
+import 'package:open_gym/screens/plate_calculator.dart';
+import 'package:open_gym/screens/user_settings.dart';
 
 class MainDrawer extends StatelessWidget {
   //TODO: Replace Text colors with theme
@@ -38,13 +41,24 @@ class MainDrawer extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
+            leading: const Icon(Icons.calculate),
+            title: const Text('Plate Calculator'),
+            onTap: () {
+              Navigator.pushNamed(context, PlateCalculatorScreen.routeName);
+            },
+          ),
+          ListTile(
               leading: const Icon(Icons.question_mark),
               title: const Text('How To'),
-              onTap: () {}),
+              onTap: () {
+                Navigator.pushNamed(context, HowToScreen.routeName);
+              }),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('User Settings'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, UserSettingsScreen.routeName);
+            },
           )
         ],
       ),

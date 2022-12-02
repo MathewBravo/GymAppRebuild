@@ -18,11 +18,14 @@ class IsarService {
 
   Future<void> createUserSettings(UserSettings userSettings) async{
     final isar = await db;
-    isar.userSettings.put(userSettings);
+    isar.writeTxnSync<int>(() => isar.userSettings.putSync(userSettings));
   }
 
   Future<UserSettings?> getUserSettings(int id) async {
     final isar = await db;
-    return isar.userSettings.get(id);
+    return isar.userSettings.getSync(id);
   }
+
+
+
 }
