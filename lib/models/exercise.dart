@@ -1,8 +1,13 @@
+import 'package:isar/isar.dart';
+part 'exercise.g.dart';
+
+@collection
 class Exercise {
-  String name;
-  List<String> bodyParts;
-  double barWeight;
-  bool assisted;
+  Id id = Isar.autoIncrement;
+  String? name;
+  List<String>? bodyParts;
+  double? barWeight;
+  bool? assisted;
 
   Exercise(
       {required this.name,

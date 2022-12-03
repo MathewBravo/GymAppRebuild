@@ -16,6 +16,24 @@ import '../models/exercise.dart';
 // 'Side Delts',
 // 'Rear Delts',
 
+List<String> EXERCISE_TYPES = [
+  'All',
+  'Back',
+  'Abs',
+  'Traps',
+  'Triceps',
+  'Forearms',
+  'Calves',
+  'Front Delts',
+  'Glutes',
+  'Chest',
+  'Biceps',
+  'Quads',
+  'Hamstrings',
+  'Side Delts',
+  'Rear Delts',
+];
+
 List<Exercise> DEFAULT_EXERCISES = [
   // Back
   Exercise(
@@ -884,5 +902,86 @@ List<Exercise> DEFAULT_EXERCISES = [
     name: 'Barbell Facepull',
     barWeight: 45,
     bodyParts: ['Rear Delts'],
+  ),
+  //Biceps
+  Exercise(
+    name: 'Alternating Dumbbell Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Barbell Curl Narrow Grip',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Barbell Curl Normal Grip',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Cable EZ Bar Curl Wide Grip',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Cable EZ Bar Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Dumbbell Single Arm Preacher Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Dumbbell Spider Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Dumbbell Twist Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'EZ Bar Curl Narrow Grip',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'EZ Bar Curl Wide Grip',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'EZ Bar Preacher Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'EZ Bar Spider Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Hammer Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Incline Dumbbell Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Machine Preacher Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
+  ),
+  Exercise(
+    name: 'Rope Twist Curl',
+    barWeight: 45,
+    bodyParts: ['Biceps'],
   ),
 ];

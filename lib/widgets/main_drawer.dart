@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:open_gym/screens/exercise_library.dart';
 import 'package:open_gym/screens/how_to.dart';
+import 'package:open_gym/screens/my_plans.dart';
 import 'package:open_gym/screens/plate_calculator.dart';
 import 'package:open_gym/screens/user_settings.dart';
+
+import '../screens/my_workouts.dart';
 
 class MainDrawer extends StatelessWidget {
   //TODO: Replace Text colors with theme
@@ -27,18 +31,24 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.fitness_center),
-            title: const Text('Workouts'),
-            onTap: () {},
+            title: const Text('My Workouts'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, MyWorkouts.routeName);
+            },
           ),
           ListTile(
             leading: const Icon(Icons.calendar_month),
-            title: const Text('Plan Maker'),
-            onTap: () {},
+            title: const Text('My Plans'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, MyPlans.routeName);
+            },
           ),
           ListTile(
             leading: const Icon(Icons.library_add),
             title: const Text('Exercise Library'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacementNamed(context, ExerciseLibrary.routeName);
+            },
           ),
           ListTile(
             leading: const Icon(Icons.calculate),
