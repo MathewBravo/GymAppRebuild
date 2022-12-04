@@ -9,6 +9,7 @@ import 'package:open_gym/screens/my_workouts.dart';
 import 'package:open_gym/screens/plan_builder.dart';
 import 'package:open_gym/screens/plate_calculator.dart';
 import 'package:open_gym/screens/user_settings.dart';
+import 'package:open_gym/screens/workout_builder.dart';
 import 'package:open_gym/services/isar_service.dart';
 
 void main() {
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
         PlanBuilder.routeName: (context) => const PlanBuilder(),
         MyPlans.routeName: (context) => MyPlans(isarService: isarService),
         MyWorkouts.routeName: (context) => MyWorkouts(isarService: isarService),
-        ExerciseLibrary.routeName: (context) => const ExerciseLibrary(),
+        ExerciseLibrary.routeName: (context) => ExerciseLibrary(isarService: isarService),
+        WorkoutBuilder.routeName: (context) => WorkoutBuilder(isarService: isarService),
       },
     );
   }
