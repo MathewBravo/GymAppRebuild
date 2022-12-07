@@ -22,7 +22,8 @@ class IsarService {
 
   Future<Isar> openIsar() async {
     if (Isar.instanceNames.isEmpty) {
-      return await Isar.open([UserSettingsSchema, ExerciseSchema, WorkoutSchema]);
+      return await Isar.open(
+          [UserSettingsSchema, ExerciseSchema, WorkoutSchema]);
     }
     return Future.value(Isar.getInstance());
   }
@@ -49,7 +50,7 @@ class IsarService {
   }
 
   // TODO: return all exercises
-  Future<List<Exercise>> getAllExercises() async{
+  Future<List<Exercise>> getAllExercises() async {
     final isar = await db;
     return isar.exercises.where().findAllSync();
   }
@@ -62,17 +63,34 @@ class IsarService {
         .findAllSync();
   }
 
-  Future<void> addWorkout(Workout workout) async{
+  Future<Workout?> getWorkout(Id id) async {
+    final isar = await db;
+    return isar.workouts.getSync(id);
+  }
+
+  Future<void> removeWorkout(Id id) async {
+    final isar = await db;
+    isar.writeTxnSync<Set<bool>>(() => {isar.workouts.deleteSync(id)});
+  }
+
+  Future<void> removeExercises(
+      Workout workout, List<Exercise> toBeRemoved) async {
+    final isar = await db;
+    workout.exercises.removeWhere((element) => toBeRemoved.contains(element));
+    isar.writeTxnSync(() => {workout.exercises.saveSync()});
+  }
+
+  Future<void> addWorkout(Workout workout) async {
     final isar = await db;
     isar.writeTxnSync(() {
       isar.workouts.putSync(workout);
     });
   }
 
-  Future<List<Workout>> getAllWorkouts() async{
+
+
+  Future<List<Workout>> getAllWorkouts() async {
     final isar = await db;
     return isar.workouts.where().findAllSync();
   }
-
-
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:open_gym/services/isar_service.dart';
 
 import '../models/exercise.dart';
+import '../models/workout.dart';
 
 class WorkoutBuilder extends StatefulWidget {
   static const routeName = '/workout-builder';
@@ -15,8 +16,10 @@ class WorkoutBuilder extends StatefulWidget {
 
 class _WorkoutBuilderState extends State<WorkoutBuilder> {
   TextEditingController _workoutNameController = TextEditingController();
-  List<Exercise> exercises = [];
+  List<Exercise> exerciseLibrary = [];
   List<Exercise> selectedExercises = [];
+  List<Exercise> toBeRemoved = [];
+  bool _editing = false;
 
   static String _displayStringForOption(Exercise exercise) => exercise.name!;
 
@@ -24,17 +27,44 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
     return widget.isarService.getAllExercises();
   }
 
+  void createWorkout(Workout? editWorkout) {
+    if (_editing) {
+      widget.isarService.removeExercises(editWorkout!, toBeRemoved);
+    }else {
+      final workout = Workout()
+        ..name = _workoutNameController.text
+        ..exercises.addAll(selectedExercises);
+
+      widget.isarService.addWorkout(workout);
+    }
+  }
+
+  void removeExercise(Exercise exercise) {}
+
   @override
   Widget build(BuildContext context) {
+    final workoutForEdit =
+        ModalRoute.of(context)!.settings.arguments as Workout?;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Workout Builder'),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            createWorkout(workoutForEdit);
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.save)),
       body: FutureBuilder(
         future: getExerciseLibrary(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
-            exercises = snapshot.data!;
+            if (workoutForEdit != null && !_editing) {
+              _editing = true;
+              selectedExercises = workoutForEdit.exercises.toList();
+              _workoutNameController.text = workoutForEdit.name;
+            }
+            exerciseLibrary = snapshot.data!;
             return Form(
               child: Column(
                 children: [
@@ -60,8 +90,22 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                     itemBuilder: (context, index) {
                       return Card(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Text(selectedExercises[index].name!),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(selectedExercises[index].name!),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      toBeRemoved.add(selectedExercises[index]);
+                                      selectedExercises.remove(selectedExercises[index]);
+                                    });
+                                  },
+                                  child: const Icon(Icons.delete)),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -116,7 +160,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                     if (textEditingValue.text == '') {
                       return const Iterable<Exercise>.empty();
                     }
-                    return exercises.where((element) => element.name!
+                    return exerciseLibrary.where((element) => element.name!
                         .toLowerCase()
                         .contains(textEditingValue.text.toLowerCase()));
                   },
@@ -132,14 +176,14 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(exercises[index].name!),
+                        title: Text(exerciseLibrary[index].name!),
                         onTap: () {
-                          _handleExerciseSelection(exercises[index]);
+                          _handleExerciseSelection(exerciseLibrary[index]);
                           Navigator.pop(context);
                         },
                       );
                     },
-                    itemCount: exercises.length,
+                    itemCount: exerciseLibrary.length,
                   ),
                 )
               ],
