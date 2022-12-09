@@ -34,15 +34,177 @@ class _RunWorkoutState extends State<RunWorkout> {
     }
   }
 
-  Widget setRunner(int index) {
+  Widget setRunnerNormalSet(int index) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.only(right: 45),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Expanded(
+                flex: 2,
+                child: SizedBox(
+                  width: 10,
+                )),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text('Weight'),
+                  Text('Reps'),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, i) {
+            return SizedBox(
+              height: 50,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      i > 0
+                          ? Expanded(
+                              flex: 2,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 50,
+                                    child: ElevatedButton(
+                                      style: const ButtonStyle(
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap),
+                                      onPressed: () {
+                                        if (double.tryParse(
+                                                _weightForSetController[index]![
+                                                        i - 1]
+                                                    .text) !=
+                                            null) {
+                                          double minusFive = double.parse(
+                                                  _weightForSetController[
+                                                          index]![i - 1]
+                                                      .text) -
+                                              lowestPlate;
+                                          _weightForSetController[index]![i]
+                                                  .text =
+                                              minusFive.toStringAsFixed(0);
+                                        }
+                                      },
+                                      child: const Text('-5'),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  SizedBox(
+                                    width: 50,
+                                    child: ElevatedButton(
+                                        style: const ButtonStyle(
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap),
+                                        onPressed: () {
+                                          _weightForSetController[index]![i]
+                                              .text = _weightForSetController[
+                                                  index]![i - 1]
+                                              .text;
+                                        },
+                                        child: const Icon(Icons.copy)),
+                                  ),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  SizedBox(
+                                    width: 50,
+                                    child: ElevatedButton(
+                                      style: const ButtonStyle(
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap),
+                                      onPressed: () {
+                                        if (double.tryParse(
+                                                _weightForSetController[index]![
+                                                        i - 1]
+                                                    .text) !=
+                                            null) {
+                                          double minusFive = double.parse(
+                                                  _weightForSetController[
+                                                          index]![i - 1]
+                                                      .text) +
+                                              lowestPlate;
+                                          _weightForSetController[index]![i]
+                                                  .text =
+                                              minusFive.toStringAsFixed(0);
+                                        }
+                                      },
+                                      child: const Text('+5'),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : const Expanded(
+                              flex: 2,
+                              child: Center(child: Text('Copy Above Weight'))),
+                      Expanded(
+                          flex: 1,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 40,
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  controller:
+                                      _weightForSetController[index]![i],
+                                  onFieldSubmitted: (String? string) {
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 45),
+                              SizedBox(
+                                width: 30,
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  controller: _repForSetController[index]![i],
+                                  onFieldSubmitted: (String? string) {
+                                    print(_repForSetController[index]![i].text);
+                                  },
+                                ),
+                              )
+                            ],
+                          ))
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+          itemCount: setNum[index],
+        ),
+      ]),
+    );
+  }
+
+  Widget setRunnerMyoRep(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 45),
       child: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
-            Text('Copy Above Weight'),
             Text('Weight'),
+            SizedBox(width: 45),
             Text('Reps'),
           ],
         ),
@@ -53,109 +215,81 @@ class _RunWorkoutState extends State<RunWorkout> {
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, i) {
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    i > 0
-                        ? Row(
-                            children: [
-                              SizedBox(
-                                width: 50,
-                                child: ElevatedButton(
-                                  style: const ButtonStyle(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap),
-                                  onPressed: () {
-                                    if (double.tryParse(
-                                            _weightForSetController[index]![i - 1]
-                                                .text) !=
-                                        null) {
-                                      double minusFive = double.parse(
-                                              _weightForSetController[index]![
-                                                      i - 1]
-                                                  .text) -
-                                          lowestPlate;
-                                      _weightForSetController[index]![i].text =
-                                          minusFive.toStringAsFixed(0);
-                                    }
-                                  },
-                                  child: const Text('-5'),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 3,
-                              ),
-                              SizedBox(
-                                width: 50,
-                                child: ElevatedButton(
-                                    style: const ButtonStyle(
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap),
-                                    onPressed: () {
-                                      _weightForSetController[index]![i].text =
-                                          _weightForSetController[index]![i - 1]
-                                              .text;
-                                    },
-                                    child: const Icon(Icons.copy)),
-                              ),
-                              const SizedBox(
-                                width: 3,
-                              ),
-                              SizedBox(
-                                width: 50,
-                                child: ElevatedButton(
-                                  style: const ButtonStyle(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap),
-                                  onPressed: () {
-                                    if (double.tryParse(
-                                            _weightForSetController[index]![i - 1]
-                                                .text) !=
-                                        null) {
-                                      double minusFive = double.parse(
-                                              _weightForSetController[index]![
-                                                      i - 1]
-                                                  .text) +
-                                          lowestPlate;
-                                      _weightForSetController[index]![i].text =
-                                          minusFive.toStringAsFixed(0);
-                                    }
-                                  },
-                                  child: const Text('+5'),
-                                ),
-                              )
-                            ],
-                          )
-                        : const SizedBox(
-                            width: 200,
-                          ),
-                    SizedBox(
-                      width: 40,
-                      child: TextFormField(
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        controller: _weightForSetController[index]![i],
-                        onFieldSubmitted: (String? string) {
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 30,
-                      child: TextFormField(
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        controller: _repForSetController[index]![i],
-                        onFieldSubmitted: (String? string) {
-                          print(_repForSetController[index]![i].text);
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ],
+            return SizedBox(
+              height: 50,
+              child: Column(
+                children: [
+                  i == 0
+                      ? Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.center,
+                                        keyboardType: TextInputType.number,
+                                        controller:
+                                            _weightForSetController[index]![i],
+                                        onFieldSubmitted: (String? string) {
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 45),
+                                    SizedBox(
+                                      width: 30,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.center,
+                                        keyboardType: TextInputType.number,
+                                        controller:
+                                            _repForSetController[index]![i],
+                                        onFieldSubmitted: (String? string) {
+                                          print(_repForSetController[index]![i]
+                                              .text);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ))
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      child: Center(child: Text(_weightForSetController[index]![0].text)),
+                                    ),
+                                    SizedBox(width: 45),
+                                    SizedBox(
+                                      width: 30,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.center,
+                                        keyboardType: TextInputType.number,
+                                        controller:
+                                            _repForSetController[index]![i],
+                                        onFieldSubmitted: (String? string) {
+                                          print(_repForSetController[index]![i]
+                                              .text);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                ],
+              ),
             );
           },
           itemCount: setNum[index],
@@ -195,6 +329,7 @@ class _RunWorkoutState extends State<RunWorkout> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(exercisesForWorkout[index].name!),
+                          //TODO: Add combo box to select set type
                           Row(
                             children: [
                               const Text('Sets'),
@@ -229,7 +364,7 @@ class _RunWorkoutState extends State<RunWorkout> {
                         ],
                       ),
                     ),
-                    if (setNum[index] != 0) setRunner(index),
+                    if (setNum[index] != 0) setRunnerMyoRep(index),
                     Divider(),
                   ],
                 );
