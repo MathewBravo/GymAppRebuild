@@ -49,7 +49,6 @@ class IsarService {
         () => isar.exercises.putAllSync(DEFAULT_EXERCISES));
   }
 
-  // TODO: return all exercises
   Future<List<Exercise>> getAllExercises() async {
     final isar = await db;
     return isar.exercises.where().findAllSync();

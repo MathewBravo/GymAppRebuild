@@ -18,11 +18,6 @@ class ExerciseByType extends StatefulWidget {
 class _ExerciseByTypeState extends State<ExerciseByType> {
   List<Exercise> exercises = [];
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   Future<List<Exercise>> setExercises() async {
     if (widget.type == 'All') {

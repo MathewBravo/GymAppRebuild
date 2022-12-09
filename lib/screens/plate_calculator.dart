@@ -37,7 +37,6 @@ class _PlateCalculatorScreenState extends State<PlateCalculatorScreen> {
       _weight = widget.weightFromOtherScreen!;
     }
     _weightController.text = _weight.toStringAsFixed(0);
-    // TODO: implement initState
     super.initState();
   }
 
