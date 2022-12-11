@@ -22,7 +22,6 @@ class _RunWorkoutState extends State<RunWorkout> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     exercisesForWorkout = widget.runningWorkout.exercises.toList();
     int count = 0;
@@ -170,7 +169,7 @@ class _RunWorkoutState extends State<RunWorkout> {
                                   },
                                 ),
                               ),
-                              SizedBox(width: 45),
+                              const SizedBox(width: 45),
                               SizedBox(
                                 width: 30,
                                 child: TextFormField(
@@ -178,7 +177,6 @@ class _RunWorkoutState extends State<RunWorkout> {
                                   keyboardType: TextInputType.number,
                                   controller: _repForSetController[index]![i],
                                   onFieldSubmitted: (String? string) {
-                                    print(_repForSetController[index]![i].text);
                                   },
                                 ),
                               )
@@ -197,30 +195,30 @@ class _RunWorkoutState extends State<RunWorkout> {
   }
 
   Widget setRunnerMyoRep(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 45),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            Text('Weight'),
-            SizedBox(width: 45),
-            Text('Reps'),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, i) {
-            return SizedBox(
-              height: 50,
-              child: Column(
-                children: [
-                  i == 0
-                      ? Row(
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          Text('Weight'),
+          SizedBox(width: 45),
+          Text('Reps'),
+        ],
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, i) {
+          return SizedBox(
+            height: 65,
+            child: Column(
+              children: [
+                i == 0
+                    ? Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
                             Expanded(
                                 flex: 1,
@@ -240,7 +238,7 @@ class _RunWorkoutState extends State<RunWorkout> {
                                         },
                                       ),
                                     ),
-                                    SizedBox(width: 45),
+                                    const SizedBox(width: 45),
                                     SizedBox(
                                       width: 30,
                                       child: TextFormField(
@@ -249,16 +247,18 @@ class _RunWorkoutState extends State<RunWorkout> {
                                         controller:
                                             _repForSetController[index]![i],
                                         onFieldSubmitted: (String? string) {
-                                          print(_repForSetController[index]![i]
-                                              .text);
+
                                         },
                                       ),
                                     )
                                   ],
-                                ))
+                                )),
                           ],
-                        )
-                      : Row(
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
                             Expanded(
                                 flex: 1,
@@ -268,9 +268,12 @@ class _RunWorkoutState extends State<RunWorkout> {
                                   children: [
                                     SizedBox(
                                       width: 40,
-                                      child: Center(child: Text(_weightForSetController[index]![0].text)),
+                                      child: Center(
+                                          child: Text(
+                                              _weightForSetController[index]![0]
+                                                  .text)),
                                     ),
-                                    SizedBox(width: 45),
+                                    const SizedBox(width: 45),
                                     SizedBox(
                                       width: 30,
                                       child: TextFormField(
@@ -279,27 +282,25 @@ class _RunWorkoutState extends State<RunWorkout> {
                                         controller:
                                             _repForSetController[index]![i],
                                         onFieldSubmitted: (String? string) {
-                                          print(_repForSetController[index]![i]
-                                              .text);
+
                                         },
                                       ),
-                                    )
+                                    ),
                                   ],
-                                ))
+                                )),
                           ],
                         ),
-                ],
-              ),
-            );
-          },
-          itemCount: setNum[index],
-        ),
-      ]),
-    );
+                      ),
+              ],
+            ),
+          );
+        },
+        itemCount: setNum[index],
+      ),
+    ]);
   }
 
   void finishWorkout() {
-    print('finish');
   }
 
   @override
@@ -321,10 +322,10 @@ class _RunWorkoutState extends State<RunWorkout> {
               itemBuilder: (context, index) {
                 return Column(
                   children: [
-                    Divider(),
+                    const Divider(),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -364,8 +365,8 @@ class _RunWorkoutState extends State<RunWorkout> {
                         ],
                       ),
                     ),
-                    if (setNum[index] != 0) setRunnerMyoRep(index),
-                    Divider(),
+                    if (setNum[index] != 0) setRunnerNormalSet(index),
+                    const Divider(),
                   ],
                 );
               },
