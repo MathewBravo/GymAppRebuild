@@ -40,11 +40,15 @@ class MyApp extends StatelessWidget {
             ),
         PlateCalculatorScreen.routeName: (context) =>
             const PlateCalculatorScreen(),
-        PlanBuilder.routeName: (context) => const PlanBuilder(),
+        PlanBuilder.routeName: (context) => PlanBuilder(
+              isarService: isarService,
+            ),
         MyPlans.routeName: (context) => MyPlans(isarService: isarService),
         MyWorkouts.routeName: (context) => MyWorkouts(isarService: isarService),
-        ExerciseLibrary.routeName: (context) => ExerciseLibrary(isarService: isarService),
-        WorkoutBuilder.routeName: (context) => WorkoutBuilder(isarService: isarService),
+        ExerciseLibrary.routeName: (context) =>
+            ExerciseLibrary(isarService: isarService),
+        WorkoutBuilder.routeName: (context) =>
+            WorkoutBuilder(isarService: isarService),
       },
     );
   }
