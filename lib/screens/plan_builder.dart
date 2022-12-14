@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:open_gym/models/workout.dart';
+import 'package:open_gym/screens/workout_library.dart';
 import 'package:open_gym/services/isar_service.dart';
 
 import '../providers/plan_builder.dart';
@@ -15,9 +16,8 @@ class PlanBuilder extends StatefulWidget {
 }
 
 class _PlanBuilderState extends State<PlanBuilder> {
-  List<Workout> workoutLibrary = [];
+  List<Workout> selectedWorkouts = [];
   String _dropdownValue = PLAN_TYPE.first;
-  List<Workout> _workoutDropDown = [];
   bool _withDeload = false;
   int _duration = 5;
   List<WeekDays> weekdays = [
@@ -41,95 +41,82 @@ class _PlanBuilderState extends State<PlanBuilder> {
       appBar: AppBar(
         title: const Text('Plan Builder'),
       ),
-      body: FutureBuilder(
-        future: getWorkoutLibrary(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            workoutLibrary = snapshot.data!;
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 14.0),
-              child: Form(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text('Plan Name:'),
-                        SizedBox(width: 250, child: TextFormField()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('Plan Type'),
-                        DropdownButton(
-                            value: _dropdownValue,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            items: PLAN_TYPE
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) {
-                              setState(() {
-                                _dropdownValue = value!;
-                              });
-                            })
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('Duration'),
-                        IconButton(
-                            onPressed: () {
-                              if (_duration == 1) {
-                                return;
-                              }
-                              setState(() {
-                                _duration--;
-                              });
-                            },
-                            icon: const Icon(Icons.remove)),
-                        Text('$_duration Weeks'),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _duration++;
-                              });
-                            },
-                            icon: const Icon(Icons.add)),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                            value: _withDeload,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _withDeload = value!;
-                              });
-                            }),
-                        Text('Deload (Will Make Plan ${_duration + 1} Weeks)')
-                      ],
-                    ),
-                    daysOfTheWeek(),
-                    Text('${pickedDays.length} Days Per Week'),
-                    if (!pickedDays.isEmpty) selectedDays(),
-                  ],
-                ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 14.0),
+        child: Form(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text('Plan Name:'),
+                  SizedBox(width: 250, child: TextFormField()),
+                ],
               ),
-            );
-          } else {
-            return const Center(
-              child: Text('Loading Workout Library'),
-            );
-          }
-        },
+              Row(
+                children: [
+                  const Text('Plan Type'),
+                  DropdownButton(
+                      value: _dropdownValue,
+                      icon: const Icon(Icons.arrow_drop_down),
+                      items: PLAN_TYPE
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _dropdownValue = value!;
+                        });
+                      })
+                ],
+              ),
+              Row(
+                children: [
+                  const Text('Duration'),
+                  IconButton(
+                      onPressed: () {
+                        if (_duration == 1) {
+                          return;
+                        }
+                        setState(() {
+                          _duration--;
+                        });
+                      },
+                      icon: const Icon(Icons.remove)),
+                  Text('$_duration Weeks'),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _duration++;
+                        });
+                      },
+                      icon: const Icon(Icons.add)),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                      value: _withDeload,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _withDeload = value!;
+                        });
+                      }),
+                  Text('Deload (Will Make Plan ${_duration + 1} Weeks)')
+                ],
+              ),
+              daysOfTheWeek(),
+              Text('${pickedDays.length} Days Per Week'),
+              if (!pickedDays.isEmpty) selectedDays(),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -143,7 +130,6 @@ class _PlanBuilderState extends State<PlanBuilder> {
     for (WeekDays day in weekdays) {
       if (day.selected == true) {
         pickedDays.add(day);
-        _workoutDropDown.add(workoutLibrary.first);
       }
     }
   }
@@ -157,22 +143,23 @@ class _PlanBuilderState extends State<PlanBuilder> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(pickedDays[index].day),
-              //TODO: add Combo box with workout list
-              DropdownButton(
-                value: _workoutDropDown[index],
-                icon: const Icon(Icons.arrow_drop_down),
-                items: workoutLibrary
-                    .map<DropdownMenuItem<Workout>>((Workout workout) {
-                  return DropdownMenuItem(
-                    value: workout,
-                    child: Text(workout.name),
-                  );
-                }).toList(),
-                onChanged: (Workout? value) {
-                  _workoutDropDown[index] = value!;
-                },
-              )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(pickedDays[index].day),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WorkoutLibrary(
+                                isarService: widget.isarService,
+                              ),
+                            ));
+                      },
+                      child: const Text('Select Workout'))
+                ],
+              ),
             ],
           ),
         );
