@@ -16,7 +16,7 @@ class PlanBuilder extends StatefulWidget {
 }
 
 class _PlanBuilderState extends State<PlanBuilder> {
-  List<Workout> selectedWorkouts = [];
+  Map<WeekDays, Workout> selectedWorkouts = {};
   String _dropdownValue = PLAN_TYPE.first;
   bool _withDeload = false;
   int _duration = 5;
@@ -134,6 +134,14 @@ class _PlanBuilderState extends State<PlanBuilder> {
     }
   }
 
+  void createPlan() {
+    for (WeekDays days in selectedWorkouts.keys) {
+      if (!pickedDays.contains(days)) {
+        selectedWorkouts.remove(days);
+      }
+    }
+  }
+
   Widget selectedDays() {
     return ListView.builder(
       shrinkWrap: true,
@@ -148,18 +156,27 @@ class _PlanBuilderState extends State<PlanBuilder> {
                 children: [
                   Text(pickedDays[index].day),
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WorkoutLibrary(
-                                isarService: widget.isarService,
-                              ),
-                            ));
-                      },
-                      child: const Text('Select Workout'))
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkoutLibrary(
+                              isarService: widget.isarService,
+                            ),
+                          )).then((value) {
+                        setState(() {
+                          selectedWorkouts[pickedDays[index]] = value;
+                        });
+                      });
+                    },
+                    child: const Text('Select Workout'),
+                  )
                 ],
               ),
+              if (selectedWorkouts[pickedDays[index]] != null)
+                Text(selectedWorkouts[pickedDays[index]]!.name)
+              else
+                Text('No Workout Selected'),
             ],
           ),
         );

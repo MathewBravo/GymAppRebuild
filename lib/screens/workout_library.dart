@@ -34,7 +34,7 @@ class _WorkoutLibraryState extends State<WorkoutLibrary> {
                 return ListTile(
                   title: Text(workoutLibrary[index].name),
                   onTap: () {
-                    print(workoutLibrary[index].name);
+                    Navigator.of(context).pop(workoutLibrary[index]);
                   },
                 );
               },
