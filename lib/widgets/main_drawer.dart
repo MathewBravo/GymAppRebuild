@@ -6,6 +6,7 @@ import 'package:open_gym/screens/plate_calculator.dart';
 import 'package:open_gym/screens/user_settings.dart';
 
 import '../screens/my_workouts.dart';
+import '../screens/schedule.dart';
 
 class MainDrawer extends StatelessWidget {
   //TODO: Replace Text colors with theme
@@ -30,6 +31,13 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.calendar_month),
+            title: const Text('Schedule'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, Schedule.routeName);
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.fitness_center),
             title: const Text('My Workouts'),
             onTap: () {
@@ -37,7 +45,7 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.calendar_month),
+            leading: const Icon(Icons.edit_calendar),
             title: const Text('My Plans'),
             onTap: () {
               Navigator.pushReplacementNamed(context, MyPlans.routeName);
@@ -47,7 +55,8 @@ class MainDrawer extends StatelessWidget {
             leading: const Icon(Icons.library_add),
             title: const Text('Exercise Library'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, ExerciseLibrary.routeName);
+              Navigator.pushReplacementNamed(
+                  context, ExerciseLibrary.routeName);
             },
           ),
           ListTile(

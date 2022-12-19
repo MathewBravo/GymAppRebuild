@@ -10,7 +10,6 @@ class Plan{
   String? name;
   bool? hasDeload;
   List<DayOfTheWeek>? plannedWorkouts;
-  final workouts = IsarLinks<Workout>();
 }
 
 @embedded

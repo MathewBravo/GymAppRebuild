@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_gym/models/plan.dart';
 import 'package:open_gym/models/workout.dart';
 import 'package:open_gym/screens/workout_library.dart';
 import 'package:open_gym/services/isar_service.dart';
@@ -16,6 +17,7 @@ class PlanBuilder extends StatefulWidget {
 }
 
 class _PlanBuilderState extends State<PlanBuilder> {
+  final TextEditingController _planNameController = TextEditingController();
   Map<WeekDays, Workout> selectedWorkouts = {};
   String _dropdownValue = PLAN_TYPE.first;
   bool _withDeload = false;
@@ -50,7 +52,8 @@ class _PlanBuilderState extends State<PlanBuilder> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Text('Plan Name:'),
-                  SizedBox(width: 250, child: TextFormField()),
+                  SizedBox(width: 250,
+                      child: TextFormField(controller: _planNameController,)),
                 ],
               ),
               Row(
@@ -119,7 +122,7 @@ class _PlanBuilderState extends State<PlanBuilder> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: createPlan,
         child: const Icon(Icons.save),
       ),
     );
@@ -140,6 +143,21 @@ class _PlanBuilderState extends State<PlanBuilder> {
         selectedWorkouts.remove(days);
       }
     }
+    List<DayOfTheWeek> workouts = [];
+    selectedWorkouts.forEach((key, value) {
+      DayOfTheWeek day = DayOfTheWeek();
+      day.day = key.day;
+      day.workoutId = value.id;
+      workouts.add(day);
+    });
+    final newPlan = Plan()
+    ..name = _planNameController.text
+    ..type = _dropdownValue
+    ..duration = _duration
+    ..hasDeload = _withDeload
+    ..plannedWorkouts =  workouts;
+    widget.isarService.addPlan(newPlan);
+    // Navigator.pop(context);
   }
 
   Widget selectedDays() {
@@ -160,9 +178,10 @@ class _PlanBuilderState extends State<PlanBuilder> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WorkoutLibrary(
-                              isarService: widget.isarService,
-                            ),
+                            builder: (context) =>
+                                WorkoutLibrary(
+                                  isarService: widget.isarService,
+                                ),
                           )).then((value) {
                         setState(() {
                           selectedWorkouts[pickedDays[index]] = value;

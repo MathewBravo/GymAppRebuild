@@ -4,6 +4,7 @@ import 'package:open_gym/models/workout.dart';
 import 'package:open_gym/providers/default_exercises.dart';
 
 import '../models/exercise.dart';
+import '../models/plan.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -86,7 +87,19 @@ class IsarService {
     });
   }
 
+  Future<void> addPlan(Plan plan) async{
+    final isar = await db;
+    isar.writeTxnSync(()
+        {
+          isar.plans.putSync(plan);
+        }
+    );
+  }
 
+  Future<List<Plan>> getAllPlans() async {
+    final isar = await db;
+    return isar.plans.where().findAllSync();
+  }
 
   Future<List<Workout>> getAllWorkouts() async {
     final isar = await db;

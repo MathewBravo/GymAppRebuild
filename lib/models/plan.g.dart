@@ -50,14 +50,7 @@ const PlanSchema = CollectionSchema(
   deserializeProp: _planDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'workouts': LinkSchema(
-      id: -75762320525048389,
-      name: r'workouts',
-      target: r'Workout',
-      single: false,
-    )
-  },
+  links: {},
   embeddedSchemas: {r'DayOfTheWeek': DayOfTheWeekSchema},
   getId: _planGetId,
   getLinks: _planGetLinks,
@@ -171,12 +164,11 @@ Id _planGetId(Plan object) {
 }
 
 List<IsarLinkBase<dynamic>> _planGetLinks(Plan object) {
-  return [object.workouts];
+  return [];
 }
 
 void _planAttach(IsarCollection<dynamic> col, Id id, Plan object) {
   object.id = id;
-  object.workouts.attach(col, col.isar.collection<Workout>(), r'workouts', id);
 }
 
 extension PlanQueryWhereSort on QueryBuilder<Plan, Plan, QWhere> {
@@ -816,63 +808,7 @@ extension PlanQueryObject on QueryBuilder<Plan, Plan, QFilterCondition> {
   }
 }
 
-extension PlanQueryLinks on QueryBuilder<Plan, Plan, QFilterCondition> {
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workouts(
-      FilterQuery<Workout> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'workouts');
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workouts', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workouts', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workouts', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workouts', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'workouts', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Plan, Plan, QAfterFilterCondition> workoutsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'workouts', lower, includeLower, upper, includeUpper);
-    });
-  }
-}
+extension PlanQueryLinks on QueryBuilder<Plan, Plan, QFilterCondition> {}
 
 extension PlanQuerySortBy on QueryBuilder<Plan, Plan, QSortBy> {
   QueryBuilder<Plan, Plan, QAfterSortBy> sortByDuration() {
