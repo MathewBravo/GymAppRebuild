@@ -24,4 +24,4 @@ Exporting workouts to an excel (to share between phones)
 
 ## Feature List Beyond Release
 
-TBD
+To be determined
