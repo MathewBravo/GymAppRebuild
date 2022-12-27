@@ -6,7 +6,7 @@
 
 - [x] Add Exercises To Exercise Library
 
-Create a plan out of workouts
+- [x] Create a plan out of workouts
 
 Schedule a created plan
 
