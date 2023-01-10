@@ -1,4 +1,4 @@
-# Gym App 0.1 
+# Gym App 0.01 
 
 ## Feature List Beta Release
 
